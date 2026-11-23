@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Campus Mate</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Segoe UI", "Malgun Gothic", sans-serif;
+      background: #f4f6fb;
+      color: #2b2f3a;
+      min-height: 100vh;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      text-align: center;
+      padding: 6rem 1.5rem 4rem;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .hero p {
+      font-size: 1.25rem;
+      opacity: 0.92;
+    }
+
+    .todo-section {
+      max-width: 640px;
+      margin: -2.5rem auto 0;
+      padding: 0 1.5rem;
+    }
+
+    .todo-box {
+      background: #fff;
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 10px 30px rgba(60, 70, 120, 0.12);
+    }
+
+    .todo-box h2 {
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+    }
+
+    .todo-form {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .todo-form input {
+      flex: 1;
+      padding: 0.6rem 0.8rem;
+      border: 1px solid #d7dbe7;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    .todo-form button {
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 8px;
+      background: #667eea;
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .todo-form button:hover {
+      background: #5a6fd6;
+    }
+
+    .todo-list {
+      list-style: none;
+    }
+
+    .todo-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid #eef0f6;
+    }
+
+    .todo-item:last-child {
+      border-bottom: none;
+    }
+
+    .todo-item input[type="checkbox"] {
+      width: 1.1rem;
+      height: 1.1rem;
+      cursor: pointer;
+    }
+
+    .todo-item .title {
+      flex: 1;
+    }
+
+    .todo-item.done .title {
+      text-decoration: line-through;
+      color: #9aa1b0;
+    }
+
+    .todo-item .due {
+      font-size: 0.85rem;
+      color: #9aa1b0;
+    }
+
+    .todo-item button.delete {
+      border: none;
+      background: none;
+      color: #c0392b;
+      font-size: 1.1rem;
+      cursor: pointer;
+      padding: 0 0.3rem;
+    }
+
+    .empty {
+      color: #9aa1b0;
+      text-align: center;
+      padding: 1rem 0;
+    }
+
+    .error {
+      color: #c0392b;
+      text-align: center;
+      padding: 1rem 0;
+    }
+
+    .features {
+      max-width: 960px;
+      margin: 3rem auto 0;
+      padding: 0 1.5rem 4rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 2rem 1.5rem;
+      box-shadow: 0 10px 30px rgba(60, 70, 120, 0.12);
+    }
+
+    .card .icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .card h2 {
+      font-size: 1.25rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .card p {
+      color: #6b7280;
+      line-height: 1.6;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: #9aa1b0;
+      font-size: 0.95rem;
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <h1>Campus Mate</h1>
+    <p>대학생의 하루를 한 화면에서 — 할 일부터 날씨까지.</p>
+  </header>
+
+  <section class="todo-section">
+    <div class="todo-box">
+      <h2>할 일</h2>
+      <form class="todo-form" id="todo-form">
+        <input
+          type="text"
+          id="todo-input"
+          placeholder="할 일을 입력하세요"
+          required
+          maxlength="200"
+        />
+        <button type="submit">추가</button>
+      </form>
+      <ul class="todo-list" id="todo-list"></ul>
+      <p class="empty" id="todo-empty" hidden>등록된 할 일이 없습니다.</p>
+      <p class="error" id="todo-error" hidden>서버에 연결할 수 없습니다. 서버가 실행 중인지 확인하세요.</p>
+    </div>
+  </section>
+
+  <main class="features">
+    <section class="card">
+      <div class="icon">✅</div>
+      <h2>할 일 관리</h2>
+      <p>과제·약속·공부 등 할 일을 추가하고 마감 순으로 정렬해요. 완료 체크와 간단한 리마인더로 놓치는 일이 없어요.</p>
+    </section>
+    <section class="card">
+      <div class="icon">🌦️</div>
+      <h2>오늘의 날씨 알림</h2>
+      <p>기온·강수·미세먼지를 아침에 한눈에 확인하고, 우산이 필요하면 알려줘요.</p>
+    </section>
+    <section class="card">
+      <div class="icon">⏱️</div>
+      <h2>집중 타이머</h2>
+      <p>수업 사이 짜투리 시간에 뽀모도로 방식으로 집중 학습 시간을 관리해요.</p>
+    </section>
+  </main>
+
+  <footer>Made by Tubo</footer>
+
+  <script>
+    const API = "http://127.0.0.1:8000";
+    const listEl = document.getElementById("todo-list");
+    const emptyEl = document.getElementById("todo-empty");
+    const errorEl = document.getElementById("todo-error");
+    const form = document.getElementById("todo-form");
+    const input = document.getElementById("todo-input");
+
+    function showError(show) {
+      errorEl.hidden = !show;
+      listEl.hidden = show;
+      emptyEl.hidden = show || listEl.children.length > 0;
+    }
+
+    async function loadTodos() {
+      try {
+        const res = await fetch(`${API}/todos`);
+        if (!res.ok) throw new Error();
+        const todos = await res.json();
+        renderTodos(todos);
+        showError(false);
+      } catch {
+        showError(true);
+      }
+    }
+
+    function renderTodos(todos) {
+      listEl.innerHTML = "";
+      for (const todo of todos) {
+        const li = document.createElement("li");
+        li.className = "todo-item" + (todo.done ? " done" : "");
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.checked = !!todo.done;
+        checkbox.addEventListener("change", () => toggleDone(todo.id, checkbox.checked));
+
+        const title = document.createElement("span");
+        title.className = "title";
+        title.textContent = todo.title;
+
+        const due = document.createElement("span");
+        due.className = "due";
+        due.textContent = todo.due_date ? `마감 ${todo.due_date}` : "";
+
+        const del = document.createElement("button");
+        del.className = "delete";
+        del.textContent = "✕";
+        del.title = "삭제";
+        del.addEventListener("click", () => deleteTodo(todo.id));
+
+        li.append(checkbox, title, due, del);
+        listEl.appendChild(li);
+      }
+      emptyEl.hidden = todos.length > 0;
+    }
+
+    async function addTodo(title) {
+      await fetch(`${API}/todos`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title }),
+      });
+      input.value = "";
+      loadTodos();
+    }
+
+    async function toggleDone(id, done) {
+      await fetch(`${API}/todos/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ done }),
+      });
+      loadTodos();
+    }
+
+    async function deleteTodo(id) {
+      await fetch(`${API}/todos/${id}`, { method: "DELETE" });
+      loadTodos();
+    }
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const title = input.value.trim();
+      if (title) addTodo(title);
+    });
+
+    loadTodos();
+  </script>
+</body>
+</html>
