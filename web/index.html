@@ -41,6 +41,42 @@
       padding: 0 1.5rem;
     }
 
+    .weather-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 10px 30px rgba(60, 70, 120, 0.12);
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .weather-card .temp {
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+
+    .weather-card .sky {
+      font-size: 1.1rem;
+      color: #6b7280;
+      margin: 0.25rem 0 0.75rem;
+    }
+
+    .weather-card .pop {
+      font-size: 0.9rem;
+      color: #9aa1b0;
+      margin-bottom: 0.75rem;
+    }
+
+    .weather-card .umbrella {
+      display: inline-block;
+      background: #fdecea;
+      color: #c0392b;
+      font-size: 1.3rem;
+      font-weight: 700;
+      padding: 0.6rem 1.2rem;
+      border-radius: 999px;
+    }
+
     .todo-box {
       background: #fff;
       border-radius: 16px;
@@ -184,6 +220,12 @@
   </header>
 
   <section class="todo-section">
+    <div class="weather-card" id="weather-card">
+      <div class="temp" id="weather-temp">--°C</div>
+      <div class="sky" id="weather-sky">날씨를 불러오는 중…</div>
+      <div class="pop" id="weather-pop"></div>
+      <div class="umbrella" id="weather-umbrella" hidden>오늘 우산 챙기세요 ☂️</div>
+    </div>
     <div class="todo-box">
       <h2>할 일</h2>
       <form class="todo-form" id="todo-form">
@@ -309,7 +351,26 @@
       if (title) addTodo(title);
     });
 
+    async function loadWeather() {
+      const tempEl = document.getElementById("weather-temp");
+      const skyEl = document.getElementById("weather-sky");
+      const popEl = document.getElementById("weather-pop");
+      const umbrellaEl = document.getElementById("weather-umbrella");
+      try {
+        const res = await fetch(`${API}/weather/today`);
+        if (!res.ok) throw new Error();
+        const w = await res.json();
+        tempEl.textContent = `${w.temperature}°C`;
+        skyEl.textContent = w.sky;
+        popEl.textContent = `강수확률 ${w.precipitation_probability}%`;
+        umbrellaEl.hidden = !w.umbrella;
+      } catch {
+        skyEl.textContent = "날씨를 불러오지 못했습니다";
+      }
+    }
+
     loadTodos();
+    loadWeather();
   </script>
 </body>
 </html>

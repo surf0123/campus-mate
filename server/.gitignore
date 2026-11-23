@@ -1,0 +1,11 @@
+# 환경 변수 / 비밀 키
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# 데이터베이스
+*.db
